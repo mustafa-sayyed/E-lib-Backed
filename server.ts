@@ -1,8 +1,9 @@
 import "dotenv/config";
-import connectDB from "./db/index.ts";
-import app from "./app.ts";
+import connectDB from "./src/db/index.ts";
+import app from "./src/app.ts";
+import { config } from "./src/config/config.ts";
 
-const PORT = process.env.PORT || 3000;
+const PORT = config.PORT || 3000;
 
 connectDB()
   .then(() => {

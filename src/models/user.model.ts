@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { config } from "../config/config.ts";
 
 interface IUser {
   _id: mongoose.Types.ObjectId;
@@ -49,7 +50,7 @@ userSchema.methods.generateAccessToken = function (): string {
       name: this.name,
       email: this.email,
     },
-    process.env.ACCESS_TOKEN_SECRET!,
+    config.ACCESS_TOKEN_SECRET!,
   );
 };
 
