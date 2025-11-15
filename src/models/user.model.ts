@@ -2,18 +2,9 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { config } from "../config/config.ts";
+import type { User } from "../types.ts";
 
-interface IUser {
-  _id: mongoose.Types.ObjectId;
-  name: string;
-  email: string;
-  password: string;
-  __v: number,
-  generateAccessToken(): string;
-  verifyPassword: (password: string) => Promise<boolean>;
-}
-
-const userSchema = new mongoose.Schema<IUser>(
+const userSchema = new mongoose.Schema<User>(
   {
     name: {
       type: String,
@@ -50,23 +41,21 @@ userSchema.methods.generateAccessToken = function (): string {
       name: this.name,
       email: this.email,
     },
-    config.ACCESS_TOKEN_SECRET!,
+    config.ACCESS_TOKEN_SECRET as string,
+    {
+      expiresIn: config.ACCESS_TOKEN_EXPIRES_IN,
+    } as jwt.SignOptions,
   );
 };
-
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
-  
-  // @ts-ignore
+
   this.password = await bcrypt.hash(this.password, 10);
 
   next();
 });
 
-
-const User = mongoose.model<IUser>("User", userSchema);
-
-export { User };
+export default mongoose.model<User>("User", userSchema);

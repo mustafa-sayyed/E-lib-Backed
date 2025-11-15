@@ -9,9 +9,11 @@ app.use(cors({ origin: process.env.ORIGIN, credentials: true }));
 // Routes Declaration
 import errorHandler from "./middlewares/errorHandler.middeware.ts";
 import userRouter from "./routes/user.route.ts";
+import bookRouter from "./routes/book.route.ts";
 
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/books", bookRouter)
 
 
 app.get("/", cors(), (req, res) => {

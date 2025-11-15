@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.ts";
-import { User } from "../models/user.model.ts";
+import User from "../models/user.model.ts";
 import ApiError from "../utils/ApiError.ts";
 import httpStatusCodes from "../utils/httpStatusCodes.ts";
 
@@ -33,7 +33,7 @@ const signupUser = asyncHandler(async (req: Request, res: Response) => {
 
   const user = await User.findOne({ email });
   if (user) {
-    throw new ApiError(httpStatusCodes.BAD_REQUEST, "User already exists");
+    throw new ApiError(httpStatusCodes.BAD_REQUEST, "User already exists with this email");
   }
 
   const newUser = await User.create({ name, email, password });
