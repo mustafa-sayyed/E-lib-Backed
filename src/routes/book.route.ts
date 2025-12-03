@@ -6,10 +6,17 @@ import {
   getBookById,
   updateBook,
 } from "../controllers/book.controller.ts";
+import { upload } from "../middlewares/upload.middleware.ts";
 
 const router = Router();
 
-router.route("/").post(createBook);
+router.route("/").post(
+  upload.fields([
+    { name: "coverImage", maxCount: 1 },
+    { name: "file", maxCount: 1 },
+  ]),
+  createBook,
+);
 router.route("/").get(getAllbooks);
 router.route("/:id").get(getBookById);
 router.route("/:id").patch(updateBook);

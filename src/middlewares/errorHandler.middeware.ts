@@ -17,6 +17,7 @@ const errorHandler = (
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
   const errorStack = config.NODE_ENV === "development" ? err.stack : undefined;
+  console.log(err);
 
   res.status(statusCode).json({
     success: false,

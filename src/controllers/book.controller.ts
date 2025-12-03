@@ -2,7 +2,9 @@ import type { Request, Response } from "express";
 import asyncHandler from "../utils/asyncHandler.ts";
 
 const createBook = asyncHandler(async (req: Request, res: Response) => {
-  res.send("Book Created");
+  const { title, author, genre, langauge, price, date } = req.body;
+  console.log("Files", req.files);
+  res.json({message: "successfully submitted the form.", Body: req.body})
 });
 
 const getAllbooks = asyncHandler(async (req: Request, res: Response) => {
