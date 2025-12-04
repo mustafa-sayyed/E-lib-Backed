@@ -22,7 +22,7 @@ const bookSchema = new mongoose.Schema<Book>({
         type: String,
         required: true,
     },
-    langauge: {
+    language: {
         type: String,
         required: true,
     },
