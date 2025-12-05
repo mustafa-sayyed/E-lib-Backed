@@ -21,6 +21,6 @@ export interface Book {
   file: string;
   price: string;
   genre: string;
-  langauge: string;
+  language: string;
   publishedDate: Date;
 }

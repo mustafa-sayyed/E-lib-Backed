@@ -6,7 +6,9 @@ import {
   getBookById,
   updateBook,
 } from "../controllers/book.controller.ts";
-import { upload } from "../middlewares/upload.middleware.ts";
+import { fileUploadErrorHandler, upload } from "../middlewares/upload.middleware.ts";
+import validate from "../middlewares/validation.middleware.ts";
+import { bookSchema } from "../schemas/book.schema.ts";
 
 const router = Router();
 
@@ -15,6 +17,8 @@ router.route("/").post(
     { name: "coverImage", maxCount: 1 },
     { name: "file", maxCount: 1 },
   ]),
+  fileUploadErrorHandler,
+  validate(bookSchema),
   createBook,
 );
 router.route("/").get(getAllbooks);

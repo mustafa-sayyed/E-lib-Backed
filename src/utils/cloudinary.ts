@@ -9,12 +9,15 @@ cloudinary.config({
   secure: true,
 });
 
-export const upload = async (path) => {
+type resourceType = "auto" | "raw" | "image" | "video";
+
+export const upload = async (path: string, resourceType: resourceType = "auto") => {
   try {
     if (!path) return;
 
     const result = await cloudinary.uploader.upload(path, {
       folder: "books",
+      resource_type: resourceType,
     });
     console.log("File Uploaded: ", result);
     fs.unlinkSync(path);
@@ -27,3 +30,5 @@ export const upload = async (path) => {
     return null;
   }
 };
+
+export default cloudinary;
