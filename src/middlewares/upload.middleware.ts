@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     callback(null, uploadPath);
   },
   filename(req, file, callback) {
-    const fileName = file.originalname + Date.now();
+    const fileName = Date.now() + file.originalname;
     callback(null, fileName);
   },
 });

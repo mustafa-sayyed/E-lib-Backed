@@ -4,9 +4,10 @@ export const bookSchema = z.object({
   title: z.string().nonempty("Title is required"),
   language: z.string().nonempty("Language is required"),
   genre: z.string().nonempty("Genre is required"),
-  price: z
+  price: z.coerce
     .number()
     .nonnegative("Price cannot be negative")
+    .min(1, "Minimum 1 should be the price")
     .nonoptional("Price is required"),
   date: z
     .string()

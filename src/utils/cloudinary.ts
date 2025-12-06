@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, type UploadApiOptions } from "cloudinary";
 import { config } from "../config/config.ts";
 import fs from "node:fs";
 
@@ -9,15 +9,18 @@ cloudinary.config({
   secure: true,
 });
 
-type resourceType = "auto" | "raw" | "image" | "video";
-
-export const upload = async (path: string, resourceType: resourceType = "auto") => {
+export const upload = async (
+  path: string,
+  resourceType: UploadApiOptions["resource_type"] = "auto",
+  format: UploadApiOptions["format"] = "auto",
+) => {
   try {
     if (!path) return;
 
     const result = await cloudinary.uploader.upload(path, {
       folder: "books",
       resource_type: resourceType,
+      format: format,
     });
     console.log("File Uploaded: ", result);
     fs.unlinkSync(path);

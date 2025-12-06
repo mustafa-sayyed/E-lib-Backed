@@ -20,10 +20,33 @@ const createBook = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(httpStatusCodes.BAD_REQUEST, "Book file is required");
   }
 
-  const coverImageResult = await upload(files.coverImage[0].path);
-  const fileResult = await upload(files.file[0].path, "raw");
+  const coverImageMimeType = files.coverImage[0].mimetype.split("/").at(-1);
+  const coverImageResult = await upload(
+    files.coverImage[0].path,
+    "image",
+    coverImageMimeType,
+  );
 
-  if (!coverImageResult || !fileResult) {
+  if (!coverImageResult) {
+    console.log(coverImageResult);
+    throw new ApiError(
+      httpStatusCodes.INTERNAL_SERVER_ERROR,
+      "Failed to upload files",
+    );
+  }
+
+  const fileResult = await upload(files.file[0].path, "raw", "pdf");
+
+  if (!fileResult) {
+    if (coverImageResult) {
+      const coverImagePath = coverImageResult.secure_url.split("/");
+      const publicId =
+        coverImagePath.at(-2) + "/" + coverImagePath.at(-1)?.split(".").at(0);
+
+      await cloudinary.uploader.destroy(publicId, {
+        resource_type: "image",
+      });
+    }
     throw new ApiError(
       httpStatusCodes.INTERNAL_SERVER_ERROR,
       "Failed to upload files",
@@ -97,7 +120,8 @@ const updateBook = asyncHandler(async (req: Request, res: Response) => {
   const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
   if (files.coverImage && files.coverImage[0]) {
-    const updatedCoverImageResult = await upload(files.coverImage[0].path);
+    const coverImageMimeType = files.coverImage[0].mimetype.split("/").at(-1);
+    const updatedCoverImageResult = await upload(files.coverImage[0].path, "image", coverImageMimeType );
     if (!updatedCoverImageResult) {
       throw new ApiError(
         httpStatusCodes.INTERNAL_SERVER_ERROR,
